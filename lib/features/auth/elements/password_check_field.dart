@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:game_metrics_mobile_app/common/colors.dart';
 
-class PasswordField extends StatelessWidget {
+class PasswordCheckField extends StatelessWidget {
+  final TextEditingController passwordCheckController;
   final TextEditingController passwordController;
   final bool passwordObscured;
   final VoidCallback onTogglePassword;
 
-  const PasswordField({
+  const PasswordCheckField({
     super.key,
+    required this.passwordCheckController,
     required this.passwordController,
     required this.passwordObscured,
     required this.onTogglePassword,
@@ -16,10 +18,10 @@ class PasswordField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: passwordController,
+      controller: passwordCheckController,
       obscureText: passwordObscured,
       decoration: InputDecoration(
-        labelText: "Пароль",
+        labelText: "Подтвердите пароль",
         border: OutlineInputBorder(),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -34,6 +36,8 @@ class PasswordField extends StatelessWidget {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return "Поле не может быть пустым";
+        } else if (passwordController.text != value) {
+          return "Пароли не совпадают";
         }
         return null;
       },

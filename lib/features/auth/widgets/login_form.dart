@@ -18,6 +18,14 @@ class _LoginFormState extends State<LoginForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  bool _passwordObscured = true;
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _passwordObscured = !_passwordObscured;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -35,7 +43,11 @@ class _LoginFormState extends State<LoginForm> {
               const SizedBox(height: 20),
               EmailField(emailController: _emailController),
               const SizedBox(height: 15),
-              PasswordField(passwordController: _passwordController),
+              PasswordField(
+                passwordController: _passwordController,
+                passwordObscured: _passwordObscured,
+                onTogglePassword: _togglePasswordVisibility,
+              ),
               const SizedBox(height: 20),
               NavigateToRegisterLink(),
               const SizedBox(height: 20),

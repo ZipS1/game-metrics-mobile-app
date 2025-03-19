@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:game_metrics_mobile_app/common/widgets/box_decoration.dart';
 import 'package:game_metrics_mobile_app/features/auth/elements/email_field.dart';
 import 'package:game_metrics_mobile_app/features/auth/elements/form_title.dart';
-import 'package:game_metrics_mobile_app/features/auth/elements/login_button.dart';
-import 'package:game_metrics_mobile_app/features/auth/elements/navigate_to_register_link.dart';
+import 'package:game_metrics_mobile_app/features/auth/elements/navigate_to_login_link.dart';
 import 'package:game_metrics_mobile_app/features/auth/elements/password_field.dart';
+import 'package:game_metrics_mobile_app/features/auth/elements/register_button.dart';
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+class RegisterForm extends StatefulWidget {
+  const RegisterForm({super.key});
 
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  State<RegisterForm> createState() => _RegisterFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _RegisterFormState extends State<RegisterForm> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -31,15 +31,15 @@ class _LoginFormState extends State<LoginForm> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              FormTitle(title: 'Вход'),
+              FormTitle(title: 'Регистрация'),
               const SizedBox(height: 20),
               EmailField(emailController: _emailController),
               const SizedBox(height: 15),
               PasswordField(passwordController: _passwordController),
               const SizedBox(height: 20),
-              NavigateToRegisterLink(),
+              NavigateToLoginLink(),
               const SizedBox(height: 20),
-              LoginButton(
+              RegisterButton(
                   formKey: _formKey,
                   emailController: _emailController,
                   passwordController: _passwordController),

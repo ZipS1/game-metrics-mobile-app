@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:game_metrics_mobile_app/common/colors.dart';
 
-class LoginButton extends StatelessWidget {
-  const LoginButton({
+class RegisterButton extends StatelessWidget {
+  const RegisterButton({
     super.key,
     required GlobalKey<FormState> formKey,
     required TextEditingController emailController,
@@ -33,7 +33,7 @@ class LoginButton extends StatelessWidget {
         ),
       ),
       child: const Text(
-        'Войти',
+        'Зарегистрироваться',
         style: TextStyle(
           color: Colors.white,
           fontSize: 16,

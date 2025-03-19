@@ -18,8 +18,11 @@ class EmailField extends StatelessWidget {
         contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       ),
       validator: (value) {
+        RegExp regExp = RegExp(r'^[\w\.]+@[\w\.]+\.(com|ru)$');
         if (value == null || value.isEmpty) {
-          return 'Пожалуйста, введите e-mail';
+          return "Поле не может быть пустым";
+        } else if (!regExp.hasMatch(value)) {
+          return "Не является допустимым e-mail";
         }
         return null;
       },

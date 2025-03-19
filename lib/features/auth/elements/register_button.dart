@@ -35,7 +35,7 @@ class RegisterButton extends StatelessWidget {
       child: const Text(
         'Зарегистрироваться',
         style: TextStyle(
-          color: Colors.white,
+          color: gmTextColorAlternative,
           fontSize: 16,
         ),
       ),

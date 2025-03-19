@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_metrics_mobile_app/common/colors.dart';
 import 'package:game_metrics_mobile_app/features/auth/pages/register_page.dart';
 
 class NavigateToRegisterLink extends StatelessWidget {
@@ -18,7 +19,7 @@ class NavigateToRegisterLink extends StatelessWidget {
       child: const Text(
         "Нет аккаунта? Зарегистрироваться",
         style: TextStyle(
-          color: Colors.blue,
+          color: gmSecondaryColor,
           decoration: TextDecoration.underline,
         ),
       ),

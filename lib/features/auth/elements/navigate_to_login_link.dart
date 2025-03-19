@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_metrics_mobile_app/common/colors.dart';
 import 'package:game_metrics_mobile_app/features/auth/pages/login_page.dart';
 
 class NavigateToLoginLink extends StatelessWidget {
@@ -19,7 +20,7 @@ class NavigateToLoginLink extends StatelessWidget {
       child: const Text(
         "Уже есть аккаунт? Войти",
         style: TextStyle(
-          color: Colors.blue,
+          color: gmSecondaryColor,
           decoration: TextDecoration.underline,
         ),
       ),

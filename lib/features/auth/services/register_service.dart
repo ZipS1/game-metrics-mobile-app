@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:game_metrics_mobile_app/config/environment.dart';
 import 'package:http/http.dart' as http;
@@ -22,10 +23,17 @@ Future<String> register(
         )
         .timeout(const Duration(seconds: responseTimeoutSeconds));
 
-    if (response.statusCode == 201) {
-      return "Регистрация успешна";
-    } else {
-      return "Вероятно, пользователь уже существует";
+    switch (response.statusCode) {
+      case HttpStatus.created:
+        return "Пользователь зарегистрирован";
+      case HttpStatus.badRequest:
+        return "Неверные данные";
+      case HttpStatus.conflict:
+        return "Пользователь с таким e-mail уже зарегистрирован";
+      case HttpStatus.internalServerError:
+        return "Ошибка на стороне сервера";
+      default:
+        return "Неизвестный статус ответа";
     }
   } on TimeoutException catch (_) {
     return "Превышено время ожидания запроса";

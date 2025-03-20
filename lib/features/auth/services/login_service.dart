@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:game_metrics_mobile_app/config/environment.dart';
 import 'package:http/http.dart' as http;
@@ -22,10 +23,17 @@ Future<String> login(
         )
         .timeout(const Duration(seconds: responseTimeoutSeconds));
 
-    if (response.statusCode == 200) {
-      return "Успешный вход";
-    } else {
-      return "Неверный логин или пароль";
+    switch (response.statusCode) {
+      case HttpStatus.ok:
+        return "Успешный вход";
+      case HttpStatus.badRequest:
+        return "Неверные данные";
+      case HttpStatus.unauthorized:
+        return "Неверный логин или пароль";
+      case HttpStatus.internalServerError:
+        return "Ошибка на стороне сервера";
+      default:
+        return "Неизвестный статус ответа";
     }
   } on TimeoutException catch (_) {
     return "Превышено время ожидания запроса";

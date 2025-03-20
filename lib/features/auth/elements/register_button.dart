@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:game_metrics_mobile_app/common/colors.dart';
+import 'package:game_metrics_mobile_app/features/auth/services/register_service.dart';
 
 class RegisterButton extends StatelessWidget {
   const RegisterButton({
@@ -18,11 +19,19 @@ class RegisterButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
+      onPressed: () async {
         if (_formKey.currentState!.validate()) {
-          // Process login logic here
-          print('Email: ${_emailController.text}');
-          print('Password: ${_passwordController.text}');
+          final messenger = ScaffoldMessenger.of(context);
+
+          final String message = await register(
+            context,
+            _emailController.text,
+            _passwordController.text,
+          );
+
+          messenger.showSnackBar(
+            SnackBar(content: Text(message)),
+          );
         }
       },
       style: ElevatedButton.styleFrom(

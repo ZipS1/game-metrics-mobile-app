@@ -24,7 +24,6 @@ class RegisterButton extends StatelessWidget {
           final messenger = ScaffoldMessenger.of(context);
 
           final String message = await register(
-            context,
             _emailController.text,
             _passwordController.text,
           );

@@ -1,12 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:game_metrics_mobile_app/config/environment.dart';
+import 'package:game_metrics_mobile_app/features/auth/services/client_service.dart';
 import 'package:http/http.dart' as http;
 
-Future<String> login(
-    BuildContext context, String email, String password) async {
+Future<String> login(String email, String password) async {
   const String url = "$baseApiUrl/api/auth/login";
   final Map<String, String> headers = {"Content-Type": "application/json"};
   final Map<String, String> requestBody = {
@@ -25,6 +24,7 @@ Future<String> login(
 
     switch (response.statusCode) {
       case HttpStatus.ok:
+        await ClientService().handleLogin(jsonDecode(response.body));
         return "Успешный вход";
       case HttpStatus.badRequest:
         return "Неверные данные";

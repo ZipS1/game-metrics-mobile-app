@@ -24,7 +24,6 @@ class LoginButton extends StatelessWidget {
           final messenger = ScaffoldMessenger.of(context);
 
           final String message = await login(
-            context,
             _emailController.text,
             _passwordController.text,
           );

@@ -1,12 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:game_metrics_mobile_app/config/environment.dart';
 import 'package:http/http.dart' as http;
 
-Future<String> register(
-    BuildContext context, String email, String password) async {
+Future<String> register(String email, String password) async {
   const String url = "$baseApiUrl/api/auth/register";
   final Map<String, String> headers = {"Content-Type": "application/json"};
   final Map<String, String> requestBody = {

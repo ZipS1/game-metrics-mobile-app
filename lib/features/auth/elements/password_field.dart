@@ -34,6 +34,8 @@ class PasswordField extends StatelessWidget {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return "Поле не может быть пустым";
+        } else if (value.length < 8) {
+          return "Минимальная длина - 8 символов";
         }
         return null;
       },

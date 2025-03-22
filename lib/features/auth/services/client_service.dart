@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:game_metrics_mobile_app/common/service_pages/server_unavailable_page.dart';
+import 'package:game_metrics_mobile_app/config/environment.dart';
 import 'package:game_metrics_mobile_app/features/auth/pages/login_page.dart';
 import 'package:game_metrics_mobile_app/features/auth/pages/sample_secured_page.dart';
 import 'package:http/http.dart' as http;
@@ -17,9 +19,10 @@ class ClientService {
 
   ClientService._internal() {
     _client = _AuthenticatedClient(
-      storage: _storage,
-      navigatorKey: navigatorKey,
-    );
+        storage: _storage,
+        navigatorKey: navigatorKey,
+        onUnauthorizedCallback: _handleUnauthorized,
+        onServerUnavailableCallback: _handleServiceUnavailable);
   }
 
   Future<http.Response> get(String url) async => _client.get(Uri.parse(url));
@@ -34,16 +37,43 @@ class ClientService {
         (Route<dynamic> route) => false);
   }
 
-  Future<void> handleLogout(String token) async {
+  Future<void> handleLogout() async {
+    await _handleUnauthorized();
+  }
+
+  Future<bool> ensureAuth() async {
+    try {
+      final response = await get("$baseApiUrl/api/auth/check")
+          .timeout(Duration(seconds: responseTimeoutSeconds));
+      return response.statusCode == HttpStatus.ok;
+    } catch (_) {
+      _handleServiceUnavailable();
+      return false;
+    }
+  }
+
+  Future<void> _handleUnauthorized() async {
     await _storage.delete(key: 'access_token');
     navigatorKey.currentState?.pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const LoginPage()),
         (Route<dynamic> route) => false);
   }
 
-  Future<bool> isAuthenticated() async {
-    final token = await _storage.read(key: 'access_token');
-    return token != null;
+  void _handleServiceUnavailable() {
+    final currentContext = navigatorKey.currentContext;
+    if (currentContext != null) {
+      final currentRoute = ModalRoute.of(currentContext);
+      if (currentRoute != null &&
+          currentRoute.settings.name == 'serverUnavailableRoute') {
+        return;
+      }
+    }
+    navigatorKey.currentState?.push(
+      MaterialPageRoute(
+        builder: (_) => const ServerUnavailablePage(),
+        settings: const RouteSettings(name: 'serverUnavailableRoute'),
+      ),
+    );
   }
 }
 
@@ -51,11 +81,14 @@ class _AuthenticatedClient extends http.BaseClient {
   final FlutterSecureStorage storage;
   final GlobalKey<NavigatorState> navigatorKey;
   final http.Client _inner = http.Client();
+  final Function onUnauthorizedCallback;
+  final Function onServerUnavailableCallback;
 
-  _AuthenticatedClient({
-    required this.storage,
-    required this.navigatorKey,
-  });
+  _AuthenticatedClient(
+      {required this.storage,
+      required this.navigatorKey,
+      required this.onUnauthorizedCallback,
+      required this.onServerUnavailableCallback});
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
@@ -67,10 +100,9 @@ class _AuthenticatedClient extends http.BaseClient {
     final response = await _inner.send(request);
 
     if (response.statusCode == HttpStatus.unauthorized) {
-      await storage.delete(key: 'access_token');
-      navigatorKey.currentState?.pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const LoginPage()),
-          (Route<dynamic> route) => false);
+      await onUnauthorizedCallback();
+    } else if (response.statusCode == HttpStatus.serviceUnavailable) {
+      onServerUnavailableCallback();
     }
 
     return response;

@@ -13,6 +13,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         navigatorKey: ClientService().navigatorKey,
+        navigatorObservers: [routeObserver],
         debugShowCheckedModeBanner: false,
         home: LandingPage());
   }

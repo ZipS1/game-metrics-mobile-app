@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:game_metrics_mobile_app/common/global/route_observer.dart';
 import 'package:game_metrics_mobile_app/features/auth/pages/landing_page.dart';
-import 'package:game_metrics_mobile_app/features/auth/services/client_service.dart';
+import 'package:game_metrics_mobile_app/common/global/client_service.dart';
 
 void main() {
   runApp(const MainApp());

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:game_metrics_mobile_app/config/environment.dart';
-import 'package:game_metrics_mobile_app/features/auth/services/client_service.dart';
+import 'package:game_metrics_mobile_app/common/global/client_service.dart';
 import 'package:http/http.dart' as http;
 
 Future<String> login(String email, String password) async {

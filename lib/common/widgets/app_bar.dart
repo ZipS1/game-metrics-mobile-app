@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:game_metrics_mobile_app/common/colors.dart';
-import 'package:game_metrics_mobile_app/features/auth/services/client_service.dart';
+import 'package:game_metrics_mobile_app/common/global/client_service.dart';
 
 AppBar appBar({bool isAuthenticated = true}) {
   return AppBar(

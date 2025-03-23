@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:game_metrics_mobile_app/common/global/route_observer.dart';
-import 'package:game_metrics_mobile_app/features/auth/pages/sample_secured_page.dart';
 import 'package:game_metrics_mobile_app/common/global/client_service.dart';
+import 'package:game_metrics_mobile_app/pages/home.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -43,7 +43,7 @@ class _LandingPageState extends State<LandingPage> with RouteAware {
     if (!isAuthenticated) return;
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (_) => const SampleSecuredPage()),
+      MaterialPageRoute(builder: (_) => const HomePage()),
       (Route<dynamic> route) => false,
     );
   }

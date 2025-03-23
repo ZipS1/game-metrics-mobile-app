@@ -5,7 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:game_metrics_mobile_app/common/service_pages/server_unavailable_page.dart';
 import 'package:game_metrics_mobile_app/config/environment.dart';
 import 'package:game_metrics_mobile_app/features/auth/pages/login_page.dart';
-import 'package:game_metrics_mobile_app/features/auth/pages/sample_secured_page.dart';
+import 'package:game_metrics_mobile_app/pages/home.dart';
 import 'package:http/http.dart' as http;
 
 class ClientService {
@@ -33,7 +33,7 @@ class ClientService {
   Future<void> handleLogin(Map<String, dynamic> body) async {
     await _storage.write(key: 'access_token', value: body['access_token']);
     navigatorKey.currentState?.pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const SampleSecuredPage()),
+        MaterialPageRoute(builder: (_) => const HomePage()),
         (Route<dynamic> route) => false);
   }
 

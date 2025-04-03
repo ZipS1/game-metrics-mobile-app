@@ -5,7 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:game_metrics_mobile_app/common/service_pages/server_unavailable_page.dart';
 import 'package:game_metrics_mobile_app/config/environment.dart';
 import 'package:game_metrics_mobile_app/features/auth/pages/login_page.dart';
-import 'package:game_metrics_mobile_app/pages/home.dart';
+import 'package:game_metrics_mobile_app/features/home/pages/home.dart';
 import 'package:http/http.dart' as http;
 
 class ClientService {

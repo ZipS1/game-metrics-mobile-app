@@ -18,6 +18,12 @@ class _HomePageState extends State<HomePage> {
   late int selectedActivityId;
 
   @override
+  void initState() {
+    super.initState();
+    selectedActivityId = -1;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: appBar(),
@@ -35,7 +41,9 @@ class _HomePageState extends State<HomePage> {
               }
 
               final activities = activitiesSnapshot.data!;
-              int selectedActivityId = activities.first.id;
+              if (selectedActivityId == -1) {
+                selectedActivityId = activities.first.id;
+              }
 
               return Padding(
                 padding: EdgeInsets.all(16),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:game_metrics_mobile_app/common/styles/title_text_style.dart';
+import 'package:game_metrics_mobile_app/common/styles/text_styles.dart';
 import 'package:game_metrics_mobile_app/common/global/client_service.dart';
 
 class ServerUnavailablePage extends StatefulWidget {

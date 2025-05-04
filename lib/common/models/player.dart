@@ -3,5 +3,11 @@ class Player {
   final String name;
   final int score;
 
-  Player(this.id, this.name, this.score);
+  Player({required this.id, required this.name, required this.score});
+
+  factory Player.fromJson(Map<String, dynamic> json) => Player(
+        id: json['id'],
+        name: json['name'],
+        score: json['score'],
+      );
 }

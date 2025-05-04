@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:game_metrics_mobile_app/common/colors.dart';
 import 'package:game_metrics_mobile_app/common/models/activity.dart';
+import 'package:game_metrics_mobile_app/common/models/game.dart';
+import 'package:game_metrics_mobile_app/common/models/player.dart';
 import 'package:game_metrics_mobile_app/common/styles/text_styles.dart';
 import 'package:game_metrics_mobile_app/common/widgets/app_bar.dart';
 import 'package:game_metrics_mobile_app/common/widgets/box_decoration.dart';
 import 'package:game_metrics_mobile_app/features/home/services/activities_service.dart';
+import 'package:game_metrics_mobile_app/features/home/services/game_service.dart';
+import 'package:game_metrics_mobile_app/features/home/services/players_service.dart';
 import 'package:game_metrics_mobile_app/features/home/widgets/activity_dropdown.dart';
 import 'package:game_metrics_mobile_app/features/home/widgets/game_info_row.dart';
 import 'package:game_metrics_mobile_app/features/home/widgets/player_score_row.dart';
@@ -18,99 +22,91 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late List<Activity> activities;
-  late int selectedActivityId;
-
-  final players = [
-    {"name": "Игрок 1", "score": 100},
-    {"name": "Игрок 2", "score": -100},
-    {"name": "Игрок 3", "score": 0},
-  ];
-
-  final games = [
-    {
-      "date": DateTime(2025, 5, 1, 8, 30),
-      "duration": Duration(hours: 2, minutes: 30)
-    },
-    {"date": DateTime(2025, 5, 2, 21, 55), "duration": Duration(minutes: 45)},
-    {"date": DateTime(2024, 5, 2, 23, 52), "duration": Duration(seconds: 0)},
-  ];
+  int? selectedActivityId;
 
   @override
   void initState() {
     super.initState();
-    selectedActivityId = -1;
+    selectedActivityId = null;
+  }
+
+  void _onActivityChanged(int activityId) {
+    setState(() {
+      selectedActivityId = activityId;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: appBar(),
-        backgroundColor: gmPrimaryBackgroundColor,
-        body: FutureBuilder<List<Activity>>(
-            future: getActivities(),
-            builder: (context, activitiesSnapshot) {
-              if (activitiesSnapshot.connectionState ==
-                  ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              }
-              if (activitiesSnapshot.hasError ||
-                  activitiesSnapshot.data == null) {
-                return Center(child: Text('Failed to load activities'));
-              }
+      appBar: appBar(),
+      backgroundColor: gmPrimaryBackgroundColor,
+      body: FutureBuilder<List<Activity>>(
+        future: getActivities(),
+        builder: (context, activitiesSnapshot) {
+          if (activitiesSnapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (activitiesSnapshot.hasError || activitiesSnapshot.data == null) {
+            return Center(child: Text('Failed to load activities'));
+          }
 
-              final activities = activitiesSnapshot.data!;
-              if (selectedActivityId == -1) {
-                selectedActivityId = activities.first.id;
-              }
+          activities = activitiesSnapshot.data!;
+          selectedActivityId ??= activities.first.id;
 
-              return Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 20,
-                  children: [
-                    ActivityDropdown(
-                      selectedActivityId: selectedActivityId,
-                      activities: activities,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedActivityId = value;
-                        });
-                      },
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      spacing: 30,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            spacing: 20,
-                            children: [
-                              Container(
-                                width: double.infinity,
-                                decoration: gmBoxDecoration(),
-                                child: Text(
-                                  "Игроки",
-                                  style: gmTitleTextStyle(),
-                                  textAlign: TextAlign.center,
-                                ),
+          return Padding(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ActivityDropdown(
+                  selectedActivityId: selectedActivityId!,
+                  activities: activities,
+                  onChanged: _onActivityChanged,
+                ),
+                SizedBox(height: 20),
+                Expanded(
+                  child: Row(
+                    children: [
+                      // Players Column
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              decoration: gmBoxDecoration(),
+                              child: Text(
+                                "Игроки",
+                                style: gmTitleTextStyle(),
+                                textAlign: TextAlign.center,
                               ),
-                              Container(
-                                  width: double.infinity,
-                                  height: 300,
-                                  padding: EdgeInsets.all(20),
-                                  decoration: gmBoxDecoration(),
-                                  child: ListView.separated(
-                                    scrollDirection: Axis.vertical,
+                            ),
+                            SizedBox(height: 10),
+                            Expanded(
+                              child: FutureBuilder<List<Player>>(
+                                future: getPlayers(selectedActivityId!),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  }
+                                  if (snapshot.hasError ||
+                                      snapshot.data == null) {
+                                    return Center(
+                                        child: Text(
+                                            'Не удалось загрузить игроков'));
+                                  }
+                                  final players = snapshot.data!;
+                                  if (players.isEmpty) {
+                                    return Center(child: Text('Нет игроков'));
+                                  }
+                                  return ListView.separated(
                                     itemCount: players.length,
                                     itemBuilder: (context, index) {
                                       final player = players[index];
                                       return playerScoreRow(
-                                          player["name"] as String,
-                                          player["score"] as int);
+                                          player.name, player.score);
                                     },
                                     separatorBuilder: (context, index) =>
                                         Divider(
@@ -118,38 +114,53 @@ class _HomePageState extends State<HomePage> {
                                       thickness: 1,
                                       height: 16,
                                     ),
-                                  )),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            spacing: 20,
-                            children: [
-                              Container(
-                                width: double.infinity,
-                                decoration: gmBoxDecoration(),
-                                child: Text(
-                                  "Игры",
-                                  style: gmTitleTextStyle(),
-                                  textAlign: TextAlign.center,
-                                ),
+                                  );
+                                },
                               ),
-                              Container(
-                                  width: double.infinity,
-                                  height: 300,
-                                  padding: EdgeInsets.all(20),
-                                  decoration: gmBoxDecoration(),
-                                  child: ListView.separated(
-                                    scrollDirection: Axis.vertical,
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 30),
+                      // Games Column
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              decoration: gmBoxDecoration(),
+                              child: Text(
+                                "Игры",
+                                style: gmTitleTextStyle(),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Expanded(
+                              child: FutureBuilder<List<Game>>(
+                                future: getGames(selectedActivityId!),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  }
+                                  if (snapshot.hasError ||
+                                      snapshot.data == null) {
+                                    return Center(
+                                        child:
+                                            Text('Не удалось загрузить игры'));
+                                  }
+                                  final games = snapshot.data!;
+                                  if (games.isEmpty) {
+                                    return Center(child: Text('Нет игр'));
+                                  }
+                                  return ListView.separated(
                                     itemCount: games.length,
                                     itemBuilder: (context, index) {
                                       final game = games[index];
                                       return gameInfoRow(
-                                          game["date"] as DateTime,
-                                          game["duration"] as Duration);
+                                          game.startTime, game.duration);
                                     },
                                     separatorBuilder: (context, index) =>
                                         Divider(
@@ -157,15 +168,21 @@ class _HomePageState extends State<HomePage> {
                                       thickness: 1,
                                       height: 16,
                                     ),
-                                  )),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              );
-            }));
+              ],
+            ),
+          );
+        },
+      ),
+    );
   }
 }

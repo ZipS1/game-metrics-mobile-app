@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:game_metrics_mobile_app/common/colors.dart';
 import 'package:game_metrics_mobile_app/common/models/activity.dart';
-import 'package:game_metrics_mobile_app/common/models/game.dart';
-import 'package:game_metrics_mobile_app/common/models/player.dart';
-import 'package:game_metrics_mobile_app/common/styles/text_styles.dart';
 import 'package:game_metrics_mobile_app/common/widgets/app_bar.dart';
 import 'package:game_metrics_mobile_app/common/widgets/box_decoration.dart';
 import 'package:game_metrics_mobile_app/features/home/services/activities_service.dart';
-import 'package:game_metrics_mobile_app/features/home/services/game_service.dart';
-import 'package:game_metrics_mobile_app/features/home/services/players_service.dart';
 import 'package:game_metrics_mobile_app/features/home/widgets/activity_dropdown.dart';
-import 'package:game_metrics_mobile_app/features/home/widgets/game_info_row.dart';
-import 'package:game_metrics_mobile_app/features/home/widgets/player_score_row.dart';
+import 'package:game_metrics_mobile_app/features/home/widgets/game_list.dart';
+import 'package:game_metrics_mobile_app/features/home/widgets/player_list.dart';
+import 'package:game_metrics_mobile_app/features/home/widgets/title_box.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -70,118 +66,39 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   spacing: 30,
                   children: [
-                    // Players Column
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         spacing: 20,
                         children: [
-                          Container(
-                            width: double.infinity,
-                            decoration: gmBoxDecoration(),
-                            child: Text(
-                              "Игроки",
-                              style: gmTitleTextStyle(),
-                              textAlign: TextAlign.center,
-                            ),
+                          TitleBox(
+                            title: "Игроки",
                           ),
                           Container(
-                            width: double.infinity,
-                            height: 300,
-                            decoration: gmBoxDecoration(),
-                            padding: EdgeInsets.all(20),
-                            child: FutureBuilder<List<Player>>(
-                              future: getPlayers(selectedActivityId!),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return Center(
-                                      child: CircularProgressIndicator());
-                                }
-                                if (snapshot.hasError ||
-                                    snapshot.data == null) {
-                                  return Center(
-                                      child:
-                                          Text('Не удалось загрузить игроков'));
-                                }
-                                final players = snapshot.data!;
-                                if (players.isEmpty) {
-                                  return Center(child: Text('Нет игроков'));
-                                }
-                                return ListView.separated(
-                                  itemCount: players.length,
-                                  itemBuilder: (context, index) {
-                                    final player = players[index];
-                                    return playerScoreRow(
-                                        player.name, player.score);
-                                  },
-                                  separatorBuilder: (context, index) => Divider(
-                                    color: Colors.grey,
-                                    thickness: 1,
-                                    height: 16,
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
+                              width: double.infinity,
+                              height: 300,
+                              decoration: gmBoxDecoration(),
+                              padding: EdgeInsets.all(20),
+                              child: PlayerList(
+                                  selectedActivityId: selectedActivityId!)),
                         ],
                       ),
                     ),
-                    // Games Column
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         spacing: 20,
                         children: [
+                          TitleBox(title: "Игры"),
                           Container(
-                            width: double.infinity,
-                            decoration: gmBoxDecoration(),
-                            child: Text(
-                              "Игры",
-                              style: gmTitleTextStyle(),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          Container(
-                            width: double.infinity,
-                            height: 300,
-                            decoration: gmBoxDecoration(),
-                            padding: EdgeInsets.all(20),
-                            child: FutureBuilder<List<Game>>(
-                              future: getGames(selectedActivityId!),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return Center(
-                                      child: CircularProgressIndicator());
-                                }
-                                if (snapshot.hasError ||
-                                    snapshot.data == null) {
-                                  return Center(
-                                      child: Text('Не удалось загрузить игры'));
-                                }
-                                final games = snapshot.data!;
-                                if (games.isEmpty) {
-                                  return Center(child: Text('Нет игр'));
-                                }
-                                return ListView.separated(
-                                  itemCount: games.length,
-                                  itemBuilder: (context, index) {
-                                    final game = games[index];
-                                    return gameInfoRow(
-                                        game.startTime, game.duration);
-                                  },
-                                  separatorBuilder: (context, index) => Divider(
-                                    color: Colors.grey,
-                                    thickness: 1,
-                                    height: 16,
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
+                              width: double.infinity,
+                              height: 300,
+                              decoration: gmBoxDecoration(),
+                              padding: EdgeInsets.all(20),
+                              child: GameList(
+                                  selectedActivityId: selectedActivityId!)),
                         ],
                       ),
                     ),

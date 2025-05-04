@@ -29,6 +29,12 @@ class ClientService {
   Future<http.Response> post(String url, {dynamic body}) async =>
       _client.post(Uri.parse(url),
           body: body, headers: {'Content-Type': 'application/json'});
+  Future<http.Response> put(String url, {dynamic body}) async =>
+      _client.put(Uri.parse(url),
+          body: body, headers: {'Content-Type': 'application/json'});
+  Future<http.Response> patch(String url, {dynamic body}) async =>
+      _client.patch(Uri.parse(url),
+          body: body, headers: {'Content-Type': 'application/json'});
 
   Future<void> handleLogin(Map<String, dynamic> body) async {
     await _storage.write(key: 'access_token', value: body['access_token']);

@@ -5,6 +5,7 @@ import 'package:game_metrics_mobile_app/common/styles/title_text_style.dart';
 import 'package:game_metrics_mobile_app/common/widgets/app_bar.dart';
 import 'package:game_metrics_mobile_app/common/widgets/box_decoration.dart';
 import 'package:game_metrics_mobile_app/features/home/services/activities_service.dart';
+import 'package:game_metrics_mobile_app/features/home/widgets/activity_dropdown.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -51,18 +52,12 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   spacing: 20,
                   children: [
-                    DropdownButton<int>(
-                      padding: EdgeInsets.only(left: 10),
-                      value: selectedActivityId,
-                      items: activities
-                          .map((activity) => DropdownMenuItem(
-                                value: activity.id,
-                                child: Text(activity.name),
-                              ))
-                          .toList(),
+                    ActivityDropdown(
+                      selectedActivityId: selectedActivityId,
+                      activities: activities,
                       onChanged: (value) {
                         setState(() {
-                          selectedActivityId = value!;
+                          selectedActivityId = value;
                         });
                       },
                     ),

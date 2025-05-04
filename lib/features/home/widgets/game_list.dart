@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:game_metrics_mobile_app/common/models/game.dart';
+import 'package:game_metrics_mobile_app/common/styles/text_styles.dart';
 import 'package:game_metrics_mobile_app/features/home/services/game_service.dart';
 import 'package:game_metrics_mobile_app/features/home/widgets/game_info_row.dart';
 
 class GameList extends StatelessWidget {
-  final int selectedActivityId;
+  final int? selectedActivityId;
 
   const GameList({
     super.key,
@@ -13,8 +14,16 @@ class GameList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (selectedActivityId == null) {
+      return Center(
+          child: Text(
+        "Не выбрано активности",
+        style: gmRegularTextStyle(),
+      ));
+    }
+
     return FutureBuilder<List<Game>>(
-      future: getGames(selectedActivityId),
+      future: getGames(selectedActivityId!),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());

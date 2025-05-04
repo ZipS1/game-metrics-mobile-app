@@ -5,6 +5,7 @@ import 'package:game_metrics_mobile_app/common/widgets/app_bar.dart';
 import 'package:game_metrics_mobile_app/common/widgets/box_decoration.dart';
 import 'package:game_metrics_mobile_app/features/home/services/activities_service.dart';
 import 'package:game_metrics_mobile_app/features/home/widgets/activity_dropdown.dart';
+import 'package:game_metrics_mobile_app/features/home/widgets/error_box.dart';
 import 'package:game_metrics_mobile_app/features/home/widgets/game_list.dart';
 import 'package:game_metrics_mobile_app/features/home/widgets/player_list.dart';
 import 'package:game_metrics_mobile_app/features/home/widgets/title_box.dart';
@@ -32,7 +33,17 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       getActivitiesFuture = getActivities();
     });
-    await getActivitiesFuture;
+
+    try {
+      await getActivitiesFuture;
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Ошибка обновления: ${e.toString()}'),
+          duration: Duration(seconds: 2),
+        ));
+      }
+    }
   }
 
   void onActivityChanged(int activityId) {
@@ -54,13 +65,16 @@ class _HomePageState extends State<HomePage> {
             if (activitiesSnapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             }
-            if (activitiesSnapshot.hasError ||
-                activitiesSnapshot.data == null) {
-              return Center(child: Text('Failed to load activities'));
+            if (activitiesSnapshot.hasError) {
+              return ErrorBox(text: 'Error: ${activitiesSnapshot.error}');
+            } else if (activitiesSnapshot.data == null) {
+              return ErrorBox(text: 'Не удалось загрузить активности');
             }
 
             activities = activitiesSnapshot.data!;
-            selectedActivityId ??= activities.first.id;
+            if (activities.isNotEmpty) {
+              selectedActivityId ??= activities.first.id;
+            }
 
             return SingleChildScrollView(
               physics: AlwaysScrollableScrollPhysics(),
@@ -71,7 +85,7 @@ class _HomePageState extends State<HomePage> {
                   spacing: 20,
                   children: [
                     ActivityDropdown(
-                      selectedActivityId: selectedActivityId!,
+                      selectedActivityId: selectedActivityId,
                       activities: activities,
                       onChanged: onActivityChanged,
                     ),
@@ -95,7 +109,7 @@ class _HomePageState extends State<HomePage> {
                                   decoration: gmBoxDecoration(),
                                   padding: EdgeInsets.all(20),
                                   child: PlayerList(
-                                      selectedActivityId: selectedActivityId!)),
+                                      selectedActivityId: selectedActivityId)),
                             ],
                           ),
                         ),
@@ -112,7 +126,7 @@ class _HomePageState extends State<HomePage> {
                                   decoration: gmBoxDecoration(),
                                   padding: EdgeInsets.all(20),
                                   child: GameList(
-                                      selectedActivityId: selectedActivityId!)),
+                                      selectedActivityId: selectedActivityId)),
                             ],
                           ),
                         ),

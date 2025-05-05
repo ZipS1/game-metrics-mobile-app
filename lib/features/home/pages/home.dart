@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:game_metrics_mobile_app/common/colors.dart';
+import 'package:game_metrics_mobile_app/common/global/snackbar_service.dart';
 import 'package:game_metrics_mobile_app/common/models/activity.dart';
 import 'package:game_metrics_mobile_app/common/widgets/app_bar.dart';
 import 'package:game_metrics_mobile_app/common/styles/widget_styles.dart';
@@ -43,42 +44,32 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void onNewGameClick() {
+    if (selectedActivityId == null) {
+      SnackbarService.show('Сначала выберите активность');
+      return;
+    }
+
+    debugPrint("On new game clicked: $selectedActivityId");
+  }
+
+  void onAddPlayerClick() {
+    if (selectedActivityId == null) {
+      SnackbarService.show('Сначала выберите активность');
+      return;
+    }
+
+    debugPrint("On add player clicked: $selectedActivityId");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
       backgroundColor: gmPrimaryBackgroundColor,
       floatingActionButton: MenuButton(
-        onAddPlayer: () {
-          if (selectedActivityId == null) {
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(
-                  'Сначала выберите активность',
-                ),
-                duration: Duration(seconds: 2),
-              ));
-            }
-            return;
-          }
-
-          debugPrint("On add player clicked: $selectedActivityId");
-        },
-        onNewGame: () {
-          if (selectedActivityId == null) {
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(
-                  'Сначала выберите активность',
-                ),
-                duration: Duration(seconds: 2),
-              ));
-            }
-            return;
-          }
-
-          debugPrint("On new game clicked: $selectedActivityId");
-        },
+        onAddPlayer: onAddPlayerClick,
+        onNewGame: onNewGameClick,
       ),
       body: RefreshIndicator(
         onRefresh: onRefresh,

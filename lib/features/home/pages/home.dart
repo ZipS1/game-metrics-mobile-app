@@ -66,9 +66,12 @@ class _HomePageState extends State<HomePage> {
               return Center(child: CircularProgressIndicator());
             }
             if (activitiesSnapshot.hasError) {
-              return ErrorBox(text: 'Error: ${activitiesSnapshot.error}');
+              return ErrorBox(
+                message: 'Error: ${activitiesSnapshot.error}',
+                productionMessage: 'Не удалось загрузить активности',
+              );
             } else if (activitiesSnapshot.data == null) {
-              return ErrorBox(text: 'Не удалось загрузить активности');
+              return ErrorBox(message: 'Не удалось загрузить активности');
             }
 
             activities = activitiesSnapshot.data!;

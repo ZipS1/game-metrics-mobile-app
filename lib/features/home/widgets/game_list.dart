@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:game_metrics_mobile_app/common/models/game.dart';
 import 'package:game_metrics_mobile_app/common/styles/text_styles.dart';
 import 'package:game_metrics_mobile_app/features/home/services/game_service.dart';
+import 'package:game_metrics_mobile_app/features/home/widgets/error_box.dart';
 import 'package:game_metrics_mobile_app/features/home/widgets/game_info_row.dart';
 
 class GameList extends StatelessWidget {
@@ -28,9 +29,15 @@ class GameList extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
         }
-        if (snapshot.hasError || snapshot.data == null) {
-          return Center(child: Text('Не удалось загрузить игры'));
+
+        if (snapshot.hasError) {
+          return ErrorBox(
+              message: 'Error: ${snapshot.error}',
+              productionMessage: 'Не удалось загрузить игры');
+        } else if (snapshot.data == null) {
+          return const ErrorBox(message: 'Не удалось загрузить игры');
         }
+
         final games = snapshot.data!;
         if (games.isEmpty) {
           return Center(child: Text('Нет игр'));

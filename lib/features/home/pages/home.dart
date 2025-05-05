@@ -33,17 +33,6 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       getActivitiesFuture = getActivities();
     });
-
-    try {
-      await getActivitiesFuture;
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Ошибка обновления: ${e.toString()}'),
-          duration: Duration(seconds: 2),
-        ));
-      }
-    }
   }
 
   void onActivityChanged(int activityId) {

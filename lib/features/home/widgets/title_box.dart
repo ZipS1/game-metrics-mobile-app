@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:game_metrics_mobile_app/common/styles/text_styles.dart';
-import 'package:game_metrics_mobile_app/common/widgets/box_decoration.dart';
+import 'package:game_metrics_mobile_app/common/styles/widget_styles.dart';
 
 class TitleBox extends StatelessWidget {
   final String title;

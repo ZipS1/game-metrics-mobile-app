@@ -10,7 +10,8 @@ TextStyle gmTitleTextStyle() {
 }
 
 TextStyle gmRegularTextStyle() {
-  return const TextStyle(fontSize: 16);
+  return const TextStyle(
+      fontSize: 16, color: gmTextColor, fontWeight: FontWeight.normal);
 }
 
 TextStyle gmScoreTextStyle(Color scoreColor) {

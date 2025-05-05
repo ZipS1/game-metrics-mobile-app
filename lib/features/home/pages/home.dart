@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:game_metrics_mobile_app/common/colors.dart';
 import 'package:game_metrics_mobile_app/common/models/activity.dart';
 import 'package:game_metrics_mobile_app/common/widgets/app_bar.dart';
-import 'package:game_metrics_mobile_app/common/widgets/box_decoration.dart';
+import 'package:game_metrics_mobile_app/common/styles/widget_styles.dart';
 import 'package:game_metrics_mobile_app/features/home/services/activities_service.dart';
 import 'package:game_metrics_mobile_app/features/home/widgets/activity_dropdown.dart';
 import 'package:game_metrics_mobile_app/features/home/widgets/error_box.dart';
 import 'package:game_metrics_mobile_app/features/home/widgets/game_list.dart';
+import 'package:game_metrics_mobile_app/features/home/widgets/menu_button.dart';
 import 'package:game_metrics_mobile_app/features/home/widgets/player_list.dart';
 import 'package:game_metrics_mobile_app/features/home/widgets/title_box.dart';
 
@@ -31,6 +32,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> onRefresh() async {
     setState(() {
+      selectedActivityId = null;
       getActivitiesFuture = getActivities();
     });
   }
@@ -46,6 +48,38 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: appBar(),
       backgroundColor: gmPrimaryBackgroundColor,
+      floatingActionButton: MenuButton(
+        onAddPlayer: () {
+          if (selectedActivityId == null) {
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(
+                  'Сначала выберите активность',
+                ),
+                duration: Duration(seconds: 2),
+              ));
+            }
+            return;
+          }
+
+          debugPrint("On add player clicked: $selectedActivityId");
+        },
+        onNewGame: () {
+          if (selectedActivityId == null) {
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(
+                  'Сначала выберите активность',
+                ),
+                duration: Duration(seconds: 2),
+              ));
+            }
+            return;
+          }
+
+          debugPrint("On new game clicked: $selectedActivityId");
+        },
+      ),
       body: RefreshIndicator(
         onRefresh: onRefresh,
         child: FutureBuilder<List<Activity>>(

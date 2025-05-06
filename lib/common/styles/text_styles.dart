@@ -22,7 +22,15 @@ TextStyle gmScoreTextStyle(Color scoreColor) {
   );
 }
 
-TextStyle gmDurationTextStyle() {
+TextStyle gmPointsTextStyle() {
+  return TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+    color: gmTextColor,
+  );
+}
+
+TextStyle gmMainPageDurationTextStyle() {
   return TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.bold,

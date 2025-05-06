@@ -13,7 +13,6 @@ class ErrorBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(environment);
     String text =
         environment == "production" ? productionMessage ?? message : message;
 

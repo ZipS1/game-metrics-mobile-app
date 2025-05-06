@@ -4,6 +4,7 @@ import 'package:game_metrics_mobile_app/common/global/snackbar_service.dart';
 import 'package:game_metrics_mobile_app/common/models/activity.dart';
 import 'package:game_metrics_mobile_app/common/widgets/app_bar.dart';
 import 'package:game_metrics_mobile_app/common/styles/widget_styles.dart';
+import 'package:game_metrics_mobile_app/features/game/pages/game.dart';
 import 'package:game_metrics_mobile_app/features/home/pages/create_game.dart';
 import 'package:game_metrics_mobile_app/features/home/pages/create_player.dart';
 import 'package:game_metrics_mobile_app/features/home/services/activities_service.dart';
@@ -92,6 +93,21 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void onGameClick(int gameId) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GamePage(
+          gameId: gameId,
+        ),
+      ),
+    );
+
+    setState(() {
+      getActivitiesFuture = getActivities();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -168,12 +184,14 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               TitleBox(title: "Игры"),
                               Container(
-                                  width: double.infinity,
-                                  height: 300,
-                                  decoration: gmBoxDecoration(),
-                                  padding: EdgeInsets.all(20),
-                                  child: GameList(
-                                      selectedActivityId: selectedActivityId)),
+                                width: double.infinity,
+                                height: 300,
+                                decoration: gmBoxDecoration(),
+                                padding: EdgeInsets.all(20),
+                                child: GameList(
+                                    selectedActivityId: selectedActivityId,
+                                    onTap: onGameClick),
+                              ),
                             ],
                           ),
                         ),

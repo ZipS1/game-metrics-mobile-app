@@ -7,11 +7,10 @@ import 'package:game_metrics_mobile_app/features/home/widgets/game_info_row.dart
 
 class GameList extends StatelessWidget {
   final int? selectedActivityId;
+  final Function onTap;
 
-  const GameList({
-    super.key,
-    required this.selectedActivityId,
-  });
+  const GameList(
+      {super.key, required this.selectedActivityId, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +45,14 @@ class GameList extends StatelessWidget {
           itemCount: games.length,
           itemBuilder: (context, index) {
             final game = games[index];
-            return gameInfoRow(game.startTime, game.duration);
+            return InkWell(
+              onTap: () => onTap(game.id),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+                child: gameInfoRow(game.startTime, game.duration),
+              ),
+            );
           },
           separatorBuilder: (context, index) => Divider(
             color: Colors.grey,

@@ -9,7 +9,7 @@ class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: appBar(),
+        appBar: appBar(isAuthenticated: false),
         backgroundColor: gmPrimaryBackgroundColor,
         body: RegisterForm());
   }

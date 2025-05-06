@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:game_metrics_mobile_app/common/widgets/box_decoration.dart';
+import 'package:game_metrics_mobile_app/common/styles/widget_styles.dart';
 import 'package:game_metrics_mobile_app/features/auth/elements/email_field.dart';
 import 'package:game_metrics_mobile_app/features/auth/elements/form_title.dart';
 import 'package:game_metrics_mobile_app/features/auth/elements/login_button.dart';

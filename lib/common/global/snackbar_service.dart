@@ -5,11 +5,22 @@ class SnackbarService {
   static final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
       GlobalKey<ScaffoldMessengerState>();
 
-  static void show(String message) {
+  static void showSuccess(String message) {
     scaffoldMessengerKey.currentState?.showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: gmAccentColor,
+        backgroundColor: gmPositiveAccentColor,
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  static void showFail(String message) {
+    scaffoldMessengerKey.currentState?.showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: gmNegativeAccentColor,
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 2),
       ),

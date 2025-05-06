@@ -4,6 +4,7 @@ import 'package:game_metrics_mobile_app/common/global/snackbar_service.dart';
 import 'package:game_metrics_mobile_app/common/models/activity.dart';
 import 'package:game_metrics_mobile_app/common/widgets/app_bar.dart';
 import 'package:game_metrics_mobile_app/common/styles/widget_styles.dart';
+import 'package:game_metrics_mobile_app/features/home/pages/create_player.dart';
 import 'package:game_metrics_mobile_app/features/home/services/activities_service.dart';
 import 'package:game_metrics_mobile_app/features/home/widgets/activity_dropdown.dart';
 import 'package:game_metrics_mobile_app/features/home/widgets/error_box.dart';
@@ -46,20 +47,34 @@ class _HomePageState extends State<HomePage> {
 
   void onNewGameClick() {
     if (selectedActivityId == null) {
-      SnackbarService.show('Сначала выберите активность');
+      SnackbarService.showFail('Сначала выберите активность');
       return;
     }
 
     debugPrint("On new game clicked: $selectedActivityId");
   }
 
-  void onAddPlayerClick() {
+  void onAddPlayerClick() async {
     if (selectedActivityId == null) {
-      SnackbarService.show('Сначала выберите активность');
+      SnackbarService.showFail('Сначала выберите активность');
       return;
     }
 
-    debugPrint("On add player clicked: $selectedActivityId");
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CreatePlayerPage(
+          activityId: selectedActivityId!,
+        ),
+        fullscreenDialog: true,
+      ),
+    );
+
+    if (result == 'success') {
+      setState(() {
+        getActivitiesFuture = getActivities();
+      });
+    }
   }
 
   @override

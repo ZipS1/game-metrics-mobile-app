@@ -27,3 +27,20 @@ Future<List<Player>> getPlayers(int activityId) async {
     throw Exception('Failed to parse players: $e');
   }
 }
+
+Future<String> createPlayer(int activityId, String name) async {
+  final url = "$baseApiUrl/api/players/";
+
+  final body = {"activityId": activityId, "name": name};
+
+  final response = await ClientService().post(url, body: jsonEncode(body));
+
+  return response.statusCode == HttpStatus.created
+      ? "Игрок успешно создан"
+      : response.statusCode == HttpStatus.conflict
+          ? throw Exception("Игрок с таким именем уже существует")
+          : environment == "production"
+              ? throw Exception("Ошибка создания игрока")
+              : throw Exception(
+                  'Failed to create player: ${response.statusCode} | ${response.headers} | ${response.body}');
+}

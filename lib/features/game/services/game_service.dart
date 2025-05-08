@@ -30,3 +30,22 @@ Future<Game> getGame(int gameId) async {
 
   return game;
 }
+
+Future<String> addPointsToPlayer(int gameId, int playerId, int points) async {
+  final url = "$baseApiUrl/api/games/addPoints";
+
+  final body = {
+    "gameId": gameId,
+    "playerId": playerId,
+    "additionalPoints": points
+  };
+
+  final response = await ClientService().patch(url, body: jsonEncode(body));
+
+  return response.statusCode == HttpStatus.ok
+      ? "Очки успешно добавлены"
+      : environment == "production"
+          ? throw Exception("Ошибка при добавлении очков")
+          : throw Exception(
+              'Failed to create player: ${response.statusCode} | ${response.headers} | ${response.body}');
+}

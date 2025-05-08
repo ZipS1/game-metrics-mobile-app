@@ -23,7 +23,7 @@ class InGamePlayerList extends StatelessWidget {
           itemBuilder: (context, index) {
             final player = players[index];
             return InkWell(
-              onTap: () => onTap(player.playerId),
+              onTap: () => onTap(player),
               child: InGamePlayerRow(player: player),
             );
           },

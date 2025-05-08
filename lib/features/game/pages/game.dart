@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:game_metrics_mobile_app/common/colors.dart';
 import 'package:game_metrics_mobile_app/common/models/game.dart';
+import 'package:game_metrics_mobile_app/common/models/game_player.dart';
 import 'package:game_metrics_mobile_app/common/styles/text_styles.dart';
 import 'package:game_metrics_mobile_app/common/styles/widget_styles.dart';
 import 'package:game_metrics_mobile_app/common/widgets/app_bar.dart';
+import 'package:game_metrics_mobile_app/features/game/pages/add_points.dart';
 import 'package:game_metrics_mobile_app/features/game/services/game_service.dart';
 import 'package:game_metrics_mobile_app/features/game/widgets/in_game_player_list.dart';
 import 'package:game_metrics_mobile_app/features/home/widgets/error_box.dart';
@@ -53,11 +55,28 @@ class _GamePageState extends State<GamePage> {
   }
 
   Future<void> onRefresh() async {
-    setState(() {});
+    setState(() {
+      _isGameLoaded = false;
+      getGameFuture = getGame(widget.gameId);
+    });
   }
 
-  onPlayerClick(int playerId) async {
-    debugPrint("Clicked on player with id $playerId");
+  onPlayerClick(GamePlayer player) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            AddPointsPage(gameId: widget.gameId, player: player),
+        fullscreenDialog: true,
+      ),
+    );
+
+    if (result == 'success') {
+      setState(() {
+        _isGameLoaded = false;
+        getGameFuture = getGame(widget.gameId);
+      });
+    }
   }
 
   @override

@@ -5,6 +5,7 @@ import 'package:game_metrics_mobile_app/common/models/activity.dart';
 import 'package:game_metrics_mobile_app/common/widgets/app_bar.dart';
 import 'package:game_metrics_mobile_app/common/styles/widget_styles.dart';
 import 'package:game_metrics_mobile_app/features/game/pages/game.dart';
+import 'package:game_metrics_mobile_app/features/home/pages/create_activity.dart';
 import 'package:game_metrics_mobile_app/features/home/pages/create_game.dart';
 import 'package:game_metrics_mobile_app/features/home/pages/create_player.dart';
 import 'package:game_metrics_mobile_app/features/home/services/activities_service.dart';
@@ -70,6 +71,22 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void onCreateActivityClick() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CreateActivityPage(),
+        fullscreenDialog: true,
+      ),
+    );
+
+    if (result == 'success') {
+      setState(() {
+        getActivitiesFuture = getActivities();
+      });
+    }
+  }
+
   void onAddPlayerClick() async {
     if (selectedActivityId == null) {
       SnackbarService.showFail('Сначала выберите активность');
@@ -114,6 +131,7 @@ class _HomePageState extends State<HomePage> {
       appBar: appBar(),
       backgroundColor: gmPrimaryBackgroundColor,
       floatingActionButton: MenuButton(
+        onCreateActivity: onCreateActivityClick,
         onAddPlayer: onAddPlayerClick,
         onNewGame: onNewGameClick,
       ),

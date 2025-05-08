@@ -26,3 +26,20 @@ Future<List<model.Activity>> getActivities() async {
     throw Exception('Failed to parse activities: $e');
   }
 }
+
+Future<String> createActivity(String name) async {
+  final url = "$baseApiUrl/api/activities/";
+
+  final body = {"name": name};
+
+  final response = await ClientService().post(url, body: jsonEncode(body));
+
+  return response.statusCode == HttpStatus.created
+      ? "Активность успешно создана"
+      : response.statusCode == HttpStatus.conflict
+          ? throw Exception("Активность с таким именем уже существует")
+          : environment == "production"
+              ? throw Exception("Ошибка создания активности")
+              : throw Exception(
+                  'Failed to create activity: ${response.statusCode} | ${response.headers} | ${response.body}');
+}

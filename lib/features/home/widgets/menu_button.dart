@@ -3,10 +3,15 @@ import 'package:game_metrics_mobile_app/common/colors.dart';
 import 'package:game_metrics_mobile_app/common/styles/text_styles.dart';
 
 class MenuButton extends StatefulWidget {
+  final void Function()? onCreateActivity;
   final void Function()? onAddPlayer;
   final void Function()? onNewGame;
 
-  const MenuButton({this.onAddPlayer, this.onNewGame, super.key});
+  const MenuButton(
+      {required this.onCreateActivity,
+      required this.onAddPlayer,
+      required this.onNewGame,
+      super.key});
 
   @override
   State<MenuButton> createState() => _MenuButtonState();
@@ -37,6 +42,16 @@ class _MenuButtonState extends State<MenuButton>
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    InkWell(
+                      onTap: () {
+                        setState(() => _open = false);
+                        widget.onCreateActivity?.call();
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Text('Создать активность'),
+                      ),
+                    ),
                     InkWell(
                       onTap: () {
                         setState(() => _open = false);

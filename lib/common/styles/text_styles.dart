@@ -9,6 +9,14 @@ TextStyle gmTitleTextStyle() {
   );
 }
 
+TextStyle gmHeaderTextStyle() {
+  return const TextStyle(
+    fontSize: 16,
+    color: gmTextColor,
+    fontWeight: FontWeight.bold,
+  );
+}
+
 TextStyle gmRegularTextStyle() {
   return const TextStyle(
       fontSize: 16, color: gmTextColor, fontWeight: FontWeight.normal);
@@ -23,7 +31,7 @@ TextStyle gmScoreTextStyle(Color scoreColor) {
 }
 
 TextStyle gmPointsTextStyle() {
-  return TextStyle(
+  return const TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.bold,
     color: gmTextColor,
@@ -31,7 +39,7 @@ TextStyle gmPointsTextStyle() {
 }
 
 TextStyle gmMainPageDurationTextStyle() {
-  return TextStyle(
+  return const TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.bold,
   );

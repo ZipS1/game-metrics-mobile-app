@@ -44,17 +44,17 @@ class InGamePlayerList extends StatelessWidget {
         children: [
           Expanded(
             flex: 3,
-            child: Text('Имя', style: gmTitleTextStyle()),
+            child: Text('Имя', style: gmHeaderTextStyle()),
           ),
           Expanded(
             flex: 2,
             child: Text('Вход',
-                style: gmTitleTextStyle(), textAlign: TextAlign.right),
+                style: gmHeaderTextStyle(), textAlign: TextAlign.right),
           ),
           Expanded(
             flex: 2,
             child: Text('Доп.',
-                style: gmTitleTextStyle(), textAlign: TextAlign.right),
+                style: gmHeaderTextStyle(), textAlign: TextAlign.right),
           ),
         ],
       ),

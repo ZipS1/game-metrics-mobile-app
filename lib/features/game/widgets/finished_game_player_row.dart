@@ -10,9 +10,11 @@ class FinishedGamePlayerRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var endPointsColor = player.endPoints > 0
+    var delta =
+        player.endPoints - (player.entryPoints + player.additionalPoints);
+    var deltaColor = delta > 0
         ? gmPositiveAccentColor
-        : player.endPoints == 0
+        : delta == 0
             ? gmTextColor
             : gmNegativeAccentColor;
 
@@ -32,15 +34,7 @@ class FinishedGamePlayerRow extends StatelessWidget {
           Expanded(
             flex: 2,
             child: Text(
-              player.entryPoints.toString(),
-              style: gmPointsTextStyle(),
-              textAlign: TextAlign.right,
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Text(
-              player.additionalPoints.toString(),
+              (player.entryPoints + player.additionalPoints).toString(),
               style: gmPointsTextStyle(),
               textAlign: TextAlign.right,
             ),
@@ -49,7 +43,15 @@ class FinishedGamePlayerRow extends StatelessWidget {
             flex: 2,
             child: Text(
               player.endPoints.toString(),
-              style: gmScoreTextStyle(endPointsColor),
+              style: gmPointsTextStyle(),
+              textAlign: TextAlign.right,
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              delta.toString(),
+              style: gmScoreTextStyle(deltaColor),
               textAlign: TextAlign.right,
             ),
           ),

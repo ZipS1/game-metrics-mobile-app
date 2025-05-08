@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:game_metrics_mobile_app/common/global/client_service.dart';
 import 'package:game_metrics_mobile_app/common/models/game.dart';
+import 'package:game_metrics_mobile_app/common/models/game_player.dart';
 import 'package:game_metrics_mobile_app/config/environment.dart';
 
 Future<Game> getGame(int gameId) async {
@@ -47,5 +48,25 @@ Future<String> addPointsToPlayer(int gameId, int playerId, int points) async {
       : environment == "production"
           ? throw Exception("Ошибка при добавлении очков")
           : throw Exception(
-              'Failed to create player: ${response.statusCode} | ${response.headers} | ${response.body}');
+              'Failed to add points: ${response.statusCode} | ${response.headers} | ${response.body}');
+}
+
+Future<String> finishGame(int gameId, List<GamePlayer> players) async {
+  final url = "$baseApiUrl/api/games/finish";
+
+  List<Object> playersDTO = [];
+  for (var p in players) {
+    playersDTO.add({"id": p.playerId, "endPoints": p.endPoints});
+  }
+
+  final body = {"gameId": gameId, "players": playersDTO};
+
+  final response = await ClientService().put(url, body: jsonEncode(body));
+
+  return response.statusCode == HttpStatus.ok
+      ? "Игра успешно завершена"
+      : environment == "production"
+          ? throw Exception("Ошибка при завершении игры")
+          : throw Exception(
+              'Failed to finish game: ${response.statusCode} | ${response.headers} | ${response.body}');
 }

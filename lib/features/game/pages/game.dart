@@ -8,6 +8,7 @@ import 'package:game_metrics_mobile_app/common/styles/text_styles.dart';
 import 'package:game_metrics_mobile_app/common/styles/widget_styles.dart';
 import 'package:game_metrics_mobile_app/common/widgets/app_bar.dart';
 import 'package:game_metrics_mobile_app/features/game/pages/add_points.dart';
+import 'package:game_metrics_mobile_app/features/game/pages/finish_game.dart';
 import 'package:game_metrics_mobile_app/features/game/services/game_service.dart';
 import 'package:game_metrics_mobile_app/features/game/widgets/in_game_player_list.dart';
 import 'package:game_metrics_mobile_app/features/home/widgets/error_box.dart';
@@ -79,6 +80,25 @@ class _GamePageState extends State<GamePage> {
     }
   }
 
+  onFinishGameClick() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FinishGamePage(
+          gameId: game.id,
+          players: game.players,
+        ),
+        fullscreenDialog: true,
+      ),
+    );
+    if (result == 'success') {
+      setState(() {
+        _isGameLoaded = false;
+        getGameFuture = getGame(widget.gameId);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -137,9 +157,7 @@ class _GamePageState extends State<GamePage> {
                           style: gmTitleTextStyle(),
                         ),
                         ElevatedButton(
-                          onPressed: () async {
-                            debugPrint("On finish button click");
-                          },
+                          onPressed: onFinishGameClick,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: gmAccentColor,
                             padding: const EdgeInsets.symmetric(

@@ -7,6 +7,7 @@ import 'package:game_metrics_mobile_app/common/styles/text_styles.dart';
 import 'package:game_metrics_mobile_app/common/styles/widget_styles.dart';
 import 'package:game_metrics_mobile_app/common/widgets/app_bar.dart';
 import 'package:game_metrics_mobile_app/features/game/services/game_service.dart';
+import 'package:game_metrics_mobile_app/features/home/widgets/title_box.dart';
 
 class FinishGamePage extends StatefulWidget {
   final int gameId;
@@ -107,27 +108,27 @@ class _FinishGamePageState extends State<FinishGamePage> {
       appBar: appBar(),
       backgroundColor: gmPrimaryBackgroundColor,
       body: Center(
-        child: Container(
-          padding: const EdgeInsets.all(20.0),
-          decoration: gmBoxDecoration(),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
           child: Form(
             key: _formKey,
             child: Column(
+              spacing: 20,
               children: [
-                Text(
-                  "Завершение игры",
-                  style: gmTitleTextStyle(),
-                  textAlign: TextAlign.center,
+                TitleBox(title: "Завершение игры"),
+                Container(
+                    padding: EdgeInsets.all(16),
+                    decoration: gmBoxDecoration(),
+                    child: _buildPlayerList()),
+                Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: gmBoxDecoration(),
+                  child: Text(
+                    "Ожидаемая сумма: $_expectedTotal\nВведено: $_enteredTotal",
+                    style: gmRegularTextStyle(),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-                const SizedBox(height: 20),
-                _buildPlayerList(),
-                const SizedBox(height: 20),
-                Text(
-                  "Ожидаемая сумма: $_expectedTotal\nВведено: $_enteredTotal",
-                  style: gmRegularTextStyle(),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: _onSubmit,
                   style: ElevatedButton.styleFrom(

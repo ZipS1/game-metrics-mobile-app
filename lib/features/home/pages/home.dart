@@ -15,6 +15,7 @@ import 'package:game_metrics_mobile_app/features/home/widgets/game_list.dart';
 import 'package:game_metrics_mobile_app/features/home/widgets/menu_button.dart';
 import 'package:game_metrics_mobile_app/features/home/widgets/player_list.dart';
 import 'package:game_metrics_mobile_app/features/home/widgets/title_box.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -28,11 +29,21 @@ class _HomePageState extends State<HomePage> {
   int? selectedActivityId;
   late Future<List<Activity>> getActivitiesFuture;
 
+  String _appVersion = '';
+
   @override
   void initState() {
     super.initState();
     selectedActivityId = null;
     getActivitiesFuture = getActivities();
+    Future.wait([_loadAppVersion()]);
+  }
+
+  Future<void> _loadAppVersion() async {
+    final info = await PackageInfo.fromPlatform();
+    setState(() {
+      _appVersion = 'v${info.version}';
+    });
   }
 
   Future<void> onRefresh() async {
@@ -134,6 +145,18 @@ class _HomePageState extends State<HomePage> {
         onCreateActivity: onCreateActivityClick,
         onAddPlayer: onAddPlayerClick,
         onNewGame: onNewGameClick,
+      ),
+      bottomNavigationBar: SizedBox(
+        height: 40,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: Text(
+              _appVersion,
+              style: TextStyle(color: Colors.grey, fontSize: 12),
+            ),
+          ),
+        ),
       ),
       body: RefreshIndicator(
         onRefresh: onRefresh,

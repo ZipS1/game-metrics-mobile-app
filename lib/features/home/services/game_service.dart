@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:game_metrics_mobile_app/common/global/client_service.dart';
 import 'package:game_metrics_mobile_app/common/models/game.dart';
 import 'package:game_metrics_mobile_app/common/models/player.dart';
-import 'package:game_metrics_mobile_app/config/environment.dart';
+import 'package:global_configuration/global_configuration.dart';
 
 Future<List<Game>> getGames(int activityId) async {
+  final baseApiUrl = GlobalConfiguration().getValue('baseApiUrl');
+
   final url = "$baseApiUrl/api/games?activity_id=$activityId";
   final response = await ClientService().get(url);
 
@@ -25,8 +27,11 @@ Future<List<Game>> getGames(int activityId) async {
   }
 }
 
-Future<String> createGame(
+Future<(String, int)> createGame(
     int activityId, List<Player> players, int entryPoints) async {
+  final baseApiUrl = GlobalConfiguration().getValue('baseApiUrl');
+  final environment = GlobalConfiguration().getValue('environment');
+
   final url = "$baseApiUrl/api/games/";
 
   var gamePlayers =
@@ -36,8 +41,13 @@ Future<String> createGame(
 
   final response = await ClientService().post(url, body: jsonEncode(body));
 
+  int gameId = 0;
+  if (response.statusCode == HttpStatus.created) {
+    gameId = jsonDecode(response.body)["id"];
+  }
+
   return response.statusCode == HttpStatus.created
-      ? "Игра успешно создана"
+      ? ("Игра успешно создана", gameId)
       : environment == "production"
           ? throw Exception("Ошибка создания игры")
           : throw Exception(

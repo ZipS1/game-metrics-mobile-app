@@ -33,7 +33,7 @@ Widget gameInfoRow(DateTime date, Duration duration) {
         children: [
           Text(
             formattedDuration,
-            style: gmDurationTextStyle(),
+            style: gmMainPageDurationTextStyle(),
             textAlign: TextAlign.right,
           ),
         ],

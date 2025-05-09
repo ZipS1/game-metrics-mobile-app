@@ -4,6 +4,8 @@ import 'package:game_metrics_mobile_app/common/global/snackbar_service.dart';
 import 'package:game_metrics_mobile_app/common/models/activity.dart';
 import 'package:game_metrics_mobile_app/common/widgets/app_bar.dart';
 import 'package:game_metrics_mobile_app/common/styles/widget_styles.dart';
+import 'package:game_metrics_mobile_app/features/game/pages/game.dart';
+import 'package:game_metrics_mobile_app/features/home/pages/create_activity.dart';
 import 'package:game_metrics_mobile_app/features/home/pages/create_game.dart';
 import 'package:game_metrics_mobile_app/features/home/pages/create_player.dart';
 import 'package:game_metrics_mobile_app/features/home/services/activities_service.dart';
@@ -13,6 +15,7 @@ import 'package:game_metrics_mobile_app/features/home/widgets/game_list.dart';
 import 'package:game_metrics_mobile_app/features/home/widgets/menu_button.dart';
 import 'package:game_metrics_mobile_app/features/home/widgets/player_list.dart';
 import 'package:game_metrics_mobile_app/features/home/widgets/title_box.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -26,11 +29,21 @@ class _HomePageState extends State<HomePage> {
   int? selectedActivityId;
   late Future<List<Activity>> getActivitiesFuture;
 
+  String _appVersion = '';
+
   @override
   void initState() {
     super.initState();
     selectedActivityId = null;
     getActivitiesFuture = getActivities();
+    Future.wait([_loadAppVersion()]);
+  }
+
+  Future<void> _loadAppVersion() async {
+    final info = await PackageInfo.fromPlatform();
+    setState(() {
+      _appVersion = 'v${info.version}';
+    });
   }
 
   Future<void> onRefresh() async {
@@ -69,6 +82,22 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void onCreateActivityClick() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CreateActivityPage(),
+        fullscreenDialog: true,
+      ),
+    );
+
+    if (result == 'success') {
+      setState(() {
+        getActivitiesFuture = getActivities();
+      });
+    }
+  }
+
   void onAddPlayerClick() async {
     if (selectedActivityId == null) {
       SnackbarService.showFail('Сначала выберите активность');
@@ -92,14 +121,42 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void onGameClick(int gameId) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GamePage(
+          gameId: gameId,
+        ),
+      ),
+    );
+
+    setState(() {
+      getActivitiesFuture = getActivities();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
       backgroundColor: gmPrimaryBackgroundColor,
       floatingActionButton: MenuButton(
+        onCreateActivity: onCreateActivityClick,
         onAddPlayer: onAddPlayerClick,
         onNewGame: onNewGameClick,
+      ),
+      bottomNavigationBar: SizedBox(
+        height: 40,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: Text(
+              _appVersion,
+              style: TextStyle(color: Colors.grey, fontSize: 12),
+            ),
+          ),
+        ),
       ),
       body: RefreshIndicator(
         onRefresh: onRefresh,
@@ -168,12 +225,14 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               TitleBox(title: "Игры"),
                               Container(
-                                  width: double.infinity,
-                                  height: 300,
-                                  decoration: gmBoxDecoration(),
-                                  padding: EdgeInsets.all(20),
-                                  child: GameList(
-                                      selectedActivityId: selectedActivityId)),
+                                width: double.infinity,
+                                height: 300,
+                                decoration: gmBoxDecoration(),
+                                padding: EdgeInsets.all(20),
+                                child: GameList(
+                                    selectedActivityId: selectedActivityId,
+                                    onTap: onGameClick),
+                              ),
                             ],
                           ),
                         ),

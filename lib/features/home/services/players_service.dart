@@ -3,9 +3,11 @@ import 'dart:io';
 
 import 'package:game_metrics_mobile_app/common/global/client_service.dart';
 import 'package:game_metrics_mobile_app/common/models/player.dart';
-import 'package:game_metrics_mobile_app/config/environment.dart';
+import 'package:global_configuration/global_configuration.dart';
 
 Future<List<Player>> getPlayers(int activityId) async {
+  final baseApiUrl = GlobalConfiguration().getValue('baseApiUrl');
+
   final url = "$baseApiUrl/api/players?activity_id=$activityId";
   final response = await ClientService().get(url);
 
@@ -29,6 +31,9 @@ Future<List<Player>> getPlayers(int activityId) async {
 }
 
 Future<String> createPlayer(int activityId, String name) async {
+  final baseApiUrl = GlobalConfiguration().getValue('baseApiUrl');
+  final environment = GlobalConfiguration().getValue('environment');
+
   final url = "$baseApiUrl/api/players/";
 
   final body = {"activityId": activityId, "name": name};

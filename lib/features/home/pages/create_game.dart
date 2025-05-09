@@ -4,6 +4,7 @@ import 'package:game_metrics_mobile_app/common/global/snackbar_service.dart';
 import 'package:game_metrics_mobile_app/common/models/player.dart';
 import 'package:game_metrics_mobile_app/common/styles/widget_styles.dart';
 import 'package:game_metrics_mobile_app/common/widgets/app_bar.dart';
+import 'package:game_metrics_mobile_app/features/game/pages/game.dart';
 import 'package:game_metrics_mobile_app/features/home/services/game_service.dart';
 import 'package:game_metrics_mobile_app/features/home/services/players_service.dart';
 import 'package:game_metrics_mobile_app/features/home/widgets/error_box.dart';
@@ -163,8 +164,9 @@ class _CreateGamePageState extends State<CreateGamePage> {
                     }
 
                     String? message;
+                    int? gameId;
                     try {
-                      message = await createGame(
+                      (message, gameId) = await createGame(
                           widget.activityId, choosenPlayers, points!);
                       SnackbarService.showSuccess(message);
                     } catch (e) {
@@ -176,6 +178,14 @@ class _CreateGamePageState extends State<CreateGamePage> {
 
                     // ignore: use_build_context_synchronously
                     Navigator.pop(context, 'success');
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => GamePage(
+                          gameId: gameId!,
+                        ),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: gmAccentColor,

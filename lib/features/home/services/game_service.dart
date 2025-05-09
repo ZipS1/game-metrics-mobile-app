@@ -27,7 +27,7 @@ Future<List<Game>> getGames(int activityId) async {
   }
 }
 
-Future<String> createGame(
+Future<(String, int)> createGame(
     int activityId, List<Player> players, int entryPoints) async {
   final baseApiUrl = GlobalConfiguration().getValue('baseApiUrl');
   final environment = GlobalConfiguration().getValue('environment');
@@ -41,8 +41,13 @@ Future<String> createGame(
 
   final response = await ClientService().post(url, body: jsonEncode(body));
 
+  int gameId = 0;
+  if (response.statusCode == HttpStatus.created) {
+    gameId = jsonDecode(response.body)["id"];
+  }
+
   return response.statusCode == HttpStatus.created
-      ? "Игра успешно создана"
+      ? ("Игра успешно создана", gameId)
       : environment == "production"
           ? throw Exception("Ошибка создания игры")
           : throw Exception(

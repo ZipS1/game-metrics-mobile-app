@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:game_metrics_mobile_app/config/environment.dart';
+import 'package:global_configuration/global_configuration.dart';
 
 class ErrorBox extends StatelessWidget {
   final String message;
@@ -13,6 +13,8 @@ class ErrorBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final environment = GlobalConfiguration().getValue('environment');
+
     String text =
         environment == "production" ? productionMessage ?? message : message;
 

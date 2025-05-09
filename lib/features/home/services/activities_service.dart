@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:game_metrics_mobile_app/common/global/client_service.dart';
 import 'package:game_metrics_mobile_app/common/models/activity.dart' as model;
-import 'package:game_metrics_mobile_app/config/environment.dart';
+import 'package:global_configuration/global_configuration.dart';
 
 Future<List<model.Activity>> getActivities() async {
-  const String url = "$baseApiUrl/api/activities";
+  final baseApiUrl = GlobalConfiguration().getValue('baseApiUrl');
+
+  String url = "$baseApiUrl/api/activities";
   final response = await ClientService().get(url);
 
   if (response.statusCode != HttpStatus.ok) {
@@ -28,6 +30,9 @@ Future<List<model.Activity>> getActivities() async {
 }
 
 Future<String> createActivity(String name) async {
+  final baseApiUrl = GlobalConfiguration().getValue('baseApiUrl');
+  final environment = GlobalConfiguration().getValue('environment');
+
   final url = "$baseApiUrl/api/activities/";
 
   final body = {"name": name};

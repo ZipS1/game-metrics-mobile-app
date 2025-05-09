@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:game_metrics_mobile_app/common/service_pages/server_unavailable_page.dart';
-import 'package:game_metrics_mobile_app/config/environment.dart';
 import 'package:game_metrics_mobile_app/features/auth/pages/login_page.dart';
 import 'package:game_metrics_mobile_app/features/home/pages/home.dart';
+import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart' as http;
 
 class ClientService {
@@ -48,6 +48,10 @@ class ClientService {
   }
 
   Future<bool> ensureAuth() async {
+    final baseApiUrl = GlobalConfiguration().getValue('baseApiUrl');
+    final responseTimeoutSeconds =
+        GlobalConfiguration().getValue('responseTimeoutSeconds');
+
     try {
       final response = await get("$baseApiUrl/api/auth/check")
           .timeout(Duration(seconds: responseTimeoutSeconds));

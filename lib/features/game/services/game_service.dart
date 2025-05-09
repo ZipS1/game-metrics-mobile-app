@@ -4,9 +4,11 @@ import 'dart:io';
 import 'package:game_metrics_mobile_app/common/global/client_service.dart';
 import 'package:game_metrics_mobile_app/common/models/game.dart';
 import 'package:game_metrics_mobile_app/common/models/game_player.dart';
-import 'package:game_metrics_mobile_app/config/environment.dart';
+import 'package:global_configuration/global_configuration.dart';
 
 Future<Game> getGame(int gameId) async {
+  final baseApiUrl = GlobalConfiguration().getValue('baseApiUrl');
+
   final url = "$baseApiUrl/api/games/$gameId";
   final response = await ClientService().get(url);
 
@@ -33,6 +35,9 @@ Future<Game> getGame(int gameId) async {
 }
 
 Future<String> addPointsToPlayer(int gameId, int playerId, int points) async {
+  final baseApiUrl = GlobalConfiguration().getValue('baseApiUrl');
+  final environment = GlobalConfiguration().getValue('environment');
+
   final url = "$baseApiUrl/api/games/addPoints";
 
   final body = {
@@ -52,6 +57,9 @@ Future<String> addPointsToPlayer(int gameId, int playerId, int points) async {
 }
 
 Future<String> finishGame(int gameId, List<GamePlayer> players) async {
+  final baseApiUrl = GlobalConfiguration().getValue('baseApiUrl');
+  final environment = GlobalConfiguration().getValue('environment');
+
   final url = "$baseApiUrl/api/games/finish";
 
   List<Object> playersDTO = [];

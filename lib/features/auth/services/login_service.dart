@@ -31,17 +31,17 @@ Future<String> login(String email, String password) async {
         await ClientService().handleLogin(jsonDecode(response.body));
         return "Успешный вход";
       case HttpStatus.badRequest:
-        return "Неверные данные";
+        throw Exception("Неверные данные");
       case HttpStatus.unauthorized:
-        return "Неверный логин или пароль";
+        throw Exception("Неверный логин или пароль");
       case HttpStatus.internalServerError:
-        return "Ошибка на стороне сервера";
+        throw Exception("Ошибка на стороне сервера");
       default:
-        return "Неизвестный статус ответа";
+        throw Exception("Неизвестный статус ответа");
     }
   } on TimeoutException catch (_) {
-    return "Превышено время ожидания запроса";
+    throw Exception("Превышено время ожидания запроса");
   } catch (error) {
-    return "Неизвестная ошибка: $error";
+    throw Exception("Неизвестная ошибка: $error");
   }
 }

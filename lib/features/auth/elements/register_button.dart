@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:game_metrics_mobile_app/common/colors.dart';
+import 'package:game_metrics_mobile_app/common/global/snackbar_service.dart';
 import 'package:game_metrics_mobile_app/features/auth/services/register_service.dart';
 
 class RegisterButton extends StatelessWidget {
@@ -20,17 +21,17 @@ class RegisterButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        if (_formKey.currentState!.validate()) {
-          final messenger = ScaffoldMessenger.of(context);
-
+        if (!_formKey.currentState!.validate()) return;
+        try {
           final String message = await register(
             _emailController.text,
             _passwordController.text,
           );
 
-          messenger.showSnackBar(
-            SnackBar(content: Text(message)),
-          );
+          SnackbarService.showSuccess(message);
+        } catch (e) {
+          SnackbarService.showFail(
+              e.toString().replaceFirst("Exception: ", ""));
         }
       },
       style: ElevatedButton.styleFrom(

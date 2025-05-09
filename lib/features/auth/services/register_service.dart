@@ -29,17 +29,17 @@ Future<String> register(String email, String password) async {
       case HttpStatus.created:
         return "Пользователь зарегистрирован";
       case HttpStatus.badRequest:
-        return "Неверные данные";
+        throw Exception("Неверные данные");
       case HttpStatus.conflict:
-        return "Пользователь с таким e-mail уже зарегистрирован";
+        throw Exception("Пользователь с таким e-mail уже зарегистрирован");
       case HttpStatus.internalServerError:
-        return "Ошибка на стороне сервера";
+        throw Exception("Ошибка на стороне сервера");
       default:
-        return "Неизвестный статус ответа";
+        throw Exception("Неизвестный статус ответа");
     }
   } on TimeoutException catch (_) {
-    return "Превышено время ожидания запроса";
+    throw Exception("Превышено время ожидания запроса");
   } catch (error) {
-    return "Неизвестная ошибка: $error";
+    return throw Exception("Неизвестная ошибка: $error");
   }
 }

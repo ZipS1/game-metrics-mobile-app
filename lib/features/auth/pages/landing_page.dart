@@ -38,7 +38,7 @@ class _LandingPageState extends State<LandingPage> with RouteAware {
   }
 
   Future<void> _ensureAuth() async {
-    final isAuthenticated = await ClientService().ensureAuth();
+    final (isAuthenticated, _) = await ClientService().ensureAuth();
     if (!mounted) return;
     if (!isAuthenticated) return;
     Navigator.pushAndRemoveUntil(

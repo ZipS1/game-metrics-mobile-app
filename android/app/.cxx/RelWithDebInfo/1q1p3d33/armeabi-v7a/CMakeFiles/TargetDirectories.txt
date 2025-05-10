@@ -1,0 +1,2 @@
+D:/code/game_metrics_mobile_app/android/app/.cxx/RelWithDebInfo/1q1p3d33/armeabi-v7a/CMakeFiles/edit_cache.dir
+D:/code/game_metrics_mobile_app/android/app/.cxx/RelWithDebInfo/1q1p3d33/armeabi-v7a/CMakeFiles/rebuild_cache.dir

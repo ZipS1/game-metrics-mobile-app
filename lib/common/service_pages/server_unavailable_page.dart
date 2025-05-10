@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_metrics_mobile_app/common/global/snackbar_service.dart';
 import 'package:game_metrics_mobile_app/common/styles/text_styles.dart';
 import 'package:game_metrics_mobile_app/common/global/client_service.dart';
 
@@ -34,10 +35,13 @@ class _ServerUnavailablePageState extends State<ServerUnavailablePage> {
                       setState(() {
                         isCheckingConnection = true;
                       });
-                      final connectionOk = await ClientService().ensureAuth();
+                      final (connectionOk, message) =
+                          await ClientService().ensureAuth();
                       if (!context.mounted) return;
                       if (connectionOk) {
                         Navigator.pop(context);
+                      } else {
+                        SnackbarService.showFail(message);
                       }
                       setState(() {
                         isCheckingConnection = false;

@@ -47,18 +47,28 @@ class ClientService {
     await _handleUnauthorized();
   }
 
-  Future<bool> ensureAuth() async {
+  Future<(bool, String)> ensureAuth() async {
     final baseApiUrl = GlobalConfiguration().getValue('baseApiUrl');
+    final environment = GlobalConfiguration().getValue('environment');
     final responseTimeoutSeconds =
         GlobalConfiguration().getValue('responseTimeoutSeconds');
 
     try {
       final response = await get("$baseApiUrl/api/auth/check")
           .timeout(Duration(seconds: responseTimeoutSeconds));
-      return response.statusCode == HttpStatus.ok;
-    } catch (_) {
+      return response.statusCode == HttpStatus.ok
+          ? (true, "Сервер снова доступен")
+          : environment == "production"
+              ? (false, "Сервер недоступен")
+              : (
+                  false,
+                  "${response.statusCode} | ${response.body.toString()} | Server URL: $baseApiUrl"
+                );
+    } catch (e) {
       _handleServiceUnavailable();
-      return false;
+      return environment == "production"
+          ? (false, "Сервер недоступен")
+          : (false, "Ошибка: ${e.toString()} | Server URL: $baseApiUrl");
     }
   }
 

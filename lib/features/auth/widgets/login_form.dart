@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:game_metrics_mobile_app/common/styles/widget_styles.dart';
 import 'package:game_metrics_mobile_app/features/auth/elements/email_field.dart';
+import 'package:game_metrics_mobile_app/features/auth/elements/forgot_password_link.dart';
 import 'package:game_metrics_mobile_app/features/auth/elements/form_title.dart';
 import 'package:game_metrics_mobile_app/features/auth/elements/login_button.dart';
 import 'package:game_metrics_mobile_app/features/auth/elements/navigate_to_register_link.dart';
@@ -50,6 +51,7 @@ class _LoginFormState extends State<LoginForm> {
               ),
               const SizedBox(height: 20),
               NavigateToRegisterLink(),
+              ForgotPasswordLink(),
               const SizedBox(height: 20),
               LoginButton(
                   formKey: _formKey,

@@ -150,12 +150,12 @@ class _CreateGamePageState extends State<CreateGamePage> {
                 ElevatedButton(
                   onPressed: () async {
                     final points = int.tryParse(_pointsController.text);
-                    setState(() {
-                      if (points == null || points < 0) {
+                    if (points == null || points < 0) {
+                      setState(() {
                         _pointsError = 'Введите неотрицательное число';
-                        return;
-                      }
-                    });
+                      });
+                      return;
+                    }
 
                     if (choosenPlayers.isEmpty) {
                       SnackbarService.showFail(
@@ -167,7 +167,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
                     int? gameId;
                     try {
                       (message, gameId) = await createGame(
-                          widget.activityId, choosenPlayers, points!);
+                          widget.activityId, choosenPlayers, points);
                       SnackbarService.showSuccess(message);
                     } catch (e) {
                       SnackbarService.showFail(

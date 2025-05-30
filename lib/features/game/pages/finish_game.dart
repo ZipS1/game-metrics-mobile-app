@@ -107,7 +107,7 @@ class _FinishGamePageState extends State<FinishGamePage> {
     return Scaffold(
       appBar: appBar(),
       backgroundColor: gmPrimaryBackgroundColor,
-      body: Center(
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Form(

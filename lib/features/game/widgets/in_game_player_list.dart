@@ -16,21 +16,22 @@ class InGamePlayerList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _buildHeader(),
-        ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: players.length,
-          itemBuilder: (context, index) {
-            final player = players[index];
-            return InkWell(
-              onTap: () => onTap(player),
-              child: InGamePlayerRow(player: player),
-            );
-          },
-          separatorBuilder: (context, index) => const Divider(
-            color: Colors.grey,
-            thickness: 1,
-            height: 16,
+        Expanded(
+          child: ListView.separated(
+            physics: const AlwaysScrollableScrollPhysics(),
+            itemCount: players.length,
+            itemBuilder: (context, index) {
+              final player = players[index];
+              return InkWell(
+                onTap: () => onTap(player),
+                child: InGamePlayerRow(player: player),
+              );
+            },
+            separatorBuilder: (context, index) => const Divider(
+              color: Colors.grey,
+              thickness: 1,
+              height: 16,
+            ),
           ),
         ),
       ],
